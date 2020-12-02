@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search</h2>
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-10">
+            <select class="form-control" id="CriteriaId">
+                <option value="0">Name</option>
+                <option value="1">Number</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+              <input class="form-control" id="Text"/>
+        </div>
+    </div>
+   <div class="form-group">
+        <div class="col-md-10">
+            <input id="btnSearch" type="submit" value="Search" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+<table class="table"></table>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnSearch").click(function (e) {
+            $("table").empty();
+            $.ajax({
+                url: "/Home/PostSearch",
+                data: {
+                    CriteriaId: $("#CriteriaId").val(),
+                    Text: $("#Text").val(),
+                },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                   
+                    if (data.data.length) {
+                        $('table').append('<tr><th>Name</th><th>Number</th></tr>');
+                    }
+                    $.each(data.data, function (index, value) {
+                        $('table').append('<tr><td>' + value.Name + '</td><td>' + value.Number +'</td></tr>');
+                    });
+                    
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+    });
+   
+</script>
+
